@@ -29,7 +29,7 @@ def state_id_city(state_id):
             state = storage.get(State, state_id)
             if state:
                 if "name" in new_dict.keys():
-                    new_city = City(**new_dict)
+                    new_city = State(**new_dict)
                     storage.new(new_city)
                     storage.save()
                     return jsonify(new_city.to_dict()), 201
