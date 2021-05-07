@@ -19,7 +19,7 @@ def get_states():
         for key, value in all_obj.items():
             single_objs.append(value.to_dict())
         return jsonify(single_objs)
-  
+
     if request.method == 'POST':
         if request.json:
             new_dict = request.get_json()
@@ -34,7 +34,8 @@ def get_states():
             abort(400, description="Not a JSON")
 
 
-@app_views.route('/states/<state_id>',  methods=['GET', 'DELETE', 'PUT'], strict_slashes=False)
+@app_views.route('/states/<state_id>', methods=['GET', 'DELETE', 'PUT'],
+                 strict_slashes=False)
 def get_state_id(state_id):
     """
     Retrieves a State object by id
@@ -49,7 +50,7 @@ def get_state_id(state_id):
                 new_dict = value.to_dict()
                 return jsonify(new_dict)
         abort(404)
-    
+
     if request.method == 'DELETE':
         all_obj = storage.all(State)
         new_dict = {}
