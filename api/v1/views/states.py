@@ -6,8 +6,8 @@ from models import storage
 from models.state import State
 import json
 
-@app_views.route('/states', methods=['GET', 'POST'])
-@app_views.route('/states/',  methods=['GET', 'POST'])
+
+@app_views.route('/states', methods=['GET', 'POST'], strict_slashes=False)
 def get_states():
     """
     Retrieves the list of all State objects
@@ -34,7 +34,7 @@ def get_states():
             abort(400, description="Not a JSON")
 
 
-@app_views.route('/states/<state_id>',  methods=['GET', 'DELETE', 'PUT'])
+@app_views.route('/states/<state_id>',  methods=['GET', 'DELETE', 'PUT'], strict_slashes=False)
 def get_state_id(state_id):
     """
     Retrieves a State object by id
