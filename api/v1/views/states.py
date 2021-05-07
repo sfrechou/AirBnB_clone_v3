@@ -5,7 +5,7 @@ from flask import jsonify, abort, request
 from models import storage
 from models.state import State
 
-
+@app_views.route('/states', methods=['GET'])
 @app_views.route('/states/',  methods=['GET'])
 def get_states():
     """Retrieves the list of all State objects"""
@@ -14,6 +14,7 @@ def get_states():
     for key, value in all_obj.items():
         single_objs.append(value.to_dict())
     return jsonify(single_objs)
+
 
 @app_views.route('/states/<state_id>',  methods=['GET'])
 def get_state_id(state_id):
@@ -40,6 +41,7 @@ def delete_state_id(state_id):
     abort(404)
 
 
+@app_views.route('/states', methods=['POST'])
 @app_views.route('/states/', methods=['POST'])
 def post_state():
     """Creates a State object"""
@@ -54,6 +56,7 @@ def post_state():
             abort(400, description="Missing name")
     else:
         abort(400, description="Not a JSON")
+
 
 @app_views.route('/states/<state_id>', methods=['PUT'])
 def put_state_id(state_id):
