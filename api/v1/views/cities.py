@@ -14,6 +14,10 @@ def state_id_city(state_id):
     Retrieves the list of all City objects of a State
     Creates a City
     """
+    state = storage.get(State, state_id)
+    if not state:
+        abort(404)
+
     if request.method == 'GET':
         state = storage.get(State, state_id)
         if state:
