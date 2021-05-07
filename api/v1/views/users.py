@@ -68,7 +68,7 @@ def get_user_id(user_id):
             ignore_keys = ['id', 'email', 'created_at', 'updated_at']
             for user in users:
                 if user.id == user_id:
-                    for key in user.keys():
+                    for key in new_dict.keys():
                         if key not in ignore_keys:
                             user[key] = new_dict[key]
                     storage.save()
