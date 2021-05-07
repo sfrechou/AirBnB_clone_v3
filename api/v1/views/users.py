@@ -68,9 +68,9 @@ def get_user_id(user_id):
             ignore_keys = ['id', 'email', 'created_at', 'updated_at']
             for user in users:
                 if user.id == user_id:
-                    for key in new_dict.keys():
+                    for key, value in new_dict.items():
                         if key not in ignore_keys:
-                            user[key] = new_dict[key]
+                            setattr(user, key, value)
                     storage.save()
                     return jsonify(user.to_dict()), 200
             abort(404)
