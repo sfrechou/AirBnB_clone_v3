@@ -66,9 +66,7 @@ def city(city_id):
             city = storage.get(City, city_id)
             if city:
                 new_dict = request.get_json()
-                for key, value in new_dict:
-                    if key not in ('id', 'state_id', 'created_at', 'updated_at'):
-                        city[key] = new_dict[key]
+                city.name = new_dict['name']
                 storage.save()
                 return jsonify(city.to_dict()), 200
             abort(404)
