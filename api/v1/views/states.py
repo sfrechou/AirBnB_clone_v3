@@ -72,4 +72,3 @@ def get_state_id(state_id):
             abort(404)
         else:
             abort(400, description="Not a JSON")
-
