@@ -1,11 +1,12 @@
 #!/usr/bin/python3
-"""Default RESTFul API for City"""
+"""Default RESTFul API for Place"""
 from api.v1.views import app_views
 from flask import jsonify, abort, request
 from models import storage
 from models.state import State
 from models.city import City
 from models.place import Place
+from models.user import User
 import json
 
 
