@@ -32,15 +32,15 @@ def city_id_places(city_id):
             if city:
                 if "user_id" in new_dict.keys():
                     user = storage.get(User, user_id)
-                        if user:
-                            if "name" in new_dict.keys():
-                                new_place = City(**new_dict)
-                                storage.new(new_place)
-                                storage.save()
-                                return jsonify(new_place.to_dict()), 201
-                            else:
-                                abort(400, description="Missing name")
-                        abort(404)
+                    if user:
+                        if "name" in new_dict.keys():
+                            new_place = City(**new_dict)
+                            storage.new(new_place)
+                            storage.save()
+                            return jsonify(new_place.to_dict()), 201
+                        else:
+                            abort(400, description="Missing name")
+                    abort(404)
                 else:
                     abort(400, description="Missing user_id")
             abort(404)
@@ -78,8 +78,8 @@ def place(place_id):
                 for key, value in new_dict.items():
                         if key not in ignore_keys:
                             setattr(place, key, value)
-                    storage.save()
-                    return jsonify(place.to_dict()), 200
+                storage.save()
+                return jsonify(place.to_dict()), 200
             abort(404)
         else:
             abort(400, description="Not a JSON")
