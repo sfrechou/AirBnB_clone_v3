@@ -4,6 +4,7 @@ from api.v1.views import app_views
 from flask import jsonify, abort, request
 from models import storage
 from models.state import State
+import json
 
 @app_views.route('/states', methods=['GET'])
 @app_views.route('/states/',  methods=['GET'])
@@ -22,7 +23,7 @@ def get_state_id(state_id):
     all_obj = storage.all(State)
     new_dict = {}
     for key, value in all_obj.items():
-        if state_id in key:
+        if state_id == value.id:
             new_dict = value.to_dict()
             return jsonify(new_dict)
     abort(404)
@@ -60,7 +61,7 @@ def post_state():
 
 @app_views.route('/states/<state_id>', methods=['PUT'])
 def put_state_id(state_id):
-    """"""
+    """Updates a State object"""
     if request.json:
         new_dict = request.get_json()
         states = storage.all(State).values()
