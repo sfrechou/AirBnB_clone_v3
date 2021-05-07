@@ -13,14 +13,14 @@ def get_states():
     Retrieves the list of all State objects
     Creates a State object
     """
-    if request.methods == 'GET':
+    if request.method == 'GET':
         all_obj = storage.all(State)
         single_objs = []
         for key, value in all_obj.items():
             single_objs.append(value.to_dict())
         return jsonify(single_objs)
   
-    if request.methods == 'POST':
+    if request.method == 'POST':
         if request.json:
             new_dict = request.get_json()
             if "name" in new_dict.keys():
@@ -41,7 +41,7 @@ def get_state_id(state_id):
     Deletes a State object by id
     Updates a State object
     """
-    if request.methods == 'GET':
+    if request.method == 'GET':
         all_obj = storage.all(State)
         new_dict = {}
         for key, value in all_obj.items():
@@ -50,7 +50,7 @@ def get_state_id(state_id):
                 return jsonify(new_dict)
         abort(404)
     
-    if request.methods == 'DELETE':
+    if request.method == 'DELETE':
         all_obj = storage.all(State)
         new_dict = {}
         for key, value in all_obj.items():
@@ -60,7 +60,7 @@ def get_state_id(state_id):
                 return jsonify(new_dict), 200
         abort(404)
 
-    if request.methods == 'PUT':
+    if request.method == 'PUT':
         if request.json:
             new_dict = request.get_json()
             states = storage.all(State).values()
