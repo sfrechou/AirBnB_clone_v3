@@ -34,7 +34,7 @@ def delete_state_id(state_id):
     all_obj = storage.all(State)
     new_dict = {}
     for key, value in all_obj.items():
-        if state_id in key:
+        if state_id == value.id:
             value.delete()
             storage.save()
             return jsonify(new_dict), 200
