@@ -31,9 +31,9 @@ def city_id_places(city_id):
             city = storage.get(City, city_id)
             if city:
                 if "user_id" in new_dict.keys():
-                    user = storage.get(User, new_dict['us'])
+                    user = storage.get(User, new_dict['user_id'])
                     if user:
-                        if "name" in new_dict.keys():
+                        if "nam" in new_dict.keys():
                             new_place = City(**new_dict)
                             storage.new(new_place)
                             storage.save()
