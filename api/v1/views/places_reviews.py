@@ -16,10 +16,8 @@ def place_id_review(place_id):
     if request.method == 'GET':
         place = storage.get(Place, place_id)
         if place:
-            list_review = []
-            for review in place.reviews:
-                list_review.append(review)
-            return jsonify(list_review)
+            review = place.reviews()
+            return jsonify(review)
         abort(404)
 
     if request.method == 'POST':
@@ -34,7 +32,7 @@ def place_id_review(place_id):
                     abort(404)
                 if "text" not in new_dict.keys():
                     abort(400, description="Missing text")
-                new_review = Review(**new_dict)
+                new_review = Place(**new_dict)
                 storage.new(new_review)
                 storage.save()
                 return jsonify(new_review.to_dict()), 201
@@ -53,6 +51,7 @@ def reviews_id(review_id):
         review = storage.get(Review, review_id)
         if review:
             return jsonify(review.to_dict())
+        abort(404)
 
     if request.method == 'DELETE':
         review = storage.get(Review, review_id)
