@@ -33,7 +33,8 @@ def place_id_review(place_id):
                     abort(404)
                 if "text" not in new_dict.keys():
                     abort(400, description="Missing text")
-                new_review = Place(**new_dict)
+                new_dict['place_id'] = place_id
+                new_review = Review(**new_dict)
                 storage.new(new_review)
                 storage.save()
                 return jsonify(new_review.to_dict()), 201
