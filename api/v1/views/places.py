@@ -33,8 +33,8 @@ def city_id_places(city_id):
                 if "user_id" in new_dict.keys():
                     user = storage.get(User, new_dict['user_id'])
                     if user:
-                        if "nam" in new_dict.keys():
-                            new_place = City(**new_dict)
+                        if "name" in new_dict.keys():
+                            new_place = Place(**new_dict)
                             storage.new(new_place)
                             storage.save()
                             return jsonify(new_place.to_dict()), 201
