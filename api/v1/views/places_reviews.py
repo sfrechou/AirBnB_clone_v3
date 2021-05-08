@@ -8,7 +8,7 @@ from models.review import Review
 import json
     
 @app_views.route('/places/<place_id>/reviews', methods=['GET', 'POST'], strict_slashes=False)
-def state_id_city(place_id):
+def place_id_review(place_id):
     """
     Retrieves the list of all Review objects of a Place
     Creates a Review
