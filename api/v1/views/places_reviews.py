@@ -16,8 +16,10 @@ def place_id_review(place_id):
     if request.method == 'GET':
         place = storage.get(Place, place_id)
         if place:
-            review = place.reviews()
-            return jsonify(review)
+            list_review = []
+            for review in place.reviews:
+                list_review.append(review)
+            return jsonify(list_review)
         abort(404)
 
     if request.method == 'POST':
