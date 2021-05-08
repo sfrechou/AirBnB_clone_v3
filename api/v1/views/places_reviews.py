@@ -7,7 +7,7 @@ from models.place import Place
 from models.review import Review
 from models.user import User
 import json
-    
+
 @app_views.route('/places/<place_id>/reviews', methods=['GET', 'POST'], strict_slashes=False)
 def place_id_review(place_id):
     """
@@ -17,8 +17,10 @@ def place_id_review(place_id):
     if request.method == 'GET':
         place = storage.get(Place, place_id)
         if place:
-            review = place.reviews()
-            return jsonify(review)
+            single_objs = []
+            for review in place.reviews:
+                single_objs.append(review.to_dict())
+            return jsonify(single_objs)
         abort(404)
 
     if request.method == 'POST':
@@ -68,7 +70,7 @@ def reviews_id(review_id):
         if request.json:
             new_dict = request.get_json()
             reviews = storage.get(Review, review_id)
-            if reviews is None:
+            if not reviews:
                 abort(404)
             ignore_keys = ['id', 'user_id', 'place_id', 'created_at', 'updated_at']
             for key, value in new_dict.items():
