@@ -5,6 +5,7 @@ from flask import jsonify, abort, request
 from models import storage
 from models.place import Place
 from models.review import Review
+from models.user import User
 import json
     
 @app_views.route('/places/<place_id>/reviews', methods=['GET', 'POST'], strict_slashes=False)
