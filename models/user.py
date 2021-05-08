@@ -7,7 +7,7 @@ import sqlalchemy
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 import hashlib
-
+    
 
 class User(BaseModel, Base):
     """Representation of a user """
