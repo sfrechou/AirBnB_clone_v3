@@ -50,7 +50,7 @@ def reviews_id(review_id):
     if request.method == 'GET':
         review = storage.get(Review, review_id)
         if review:
-            return jsonify(review.to_dict)
+            return jsonify(review.to_dict())
 
     if request.method == 'DELETE':
         review = storage.get(Review, review_id)
