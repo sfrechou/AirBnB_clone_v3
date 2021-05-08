@@ -68,7 +68,7 @@ def reviews_id(review_id):
         if request.json:
             new_dict = request.get_json()
             reviews = storage.get(Review, review_id)
-            if not reviews:
+            if reviews is None:
                 abort(404)
             ignore_keys = ['id', 'user_id', 'place_id', 'created_at', 'updated_at']
             for key, value in new_dict.items():
