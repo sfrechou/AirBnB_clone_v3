@@ -7,6 +7,7 @@ from models.state import State
 from models.city import City
 from models.place import Place
 from models.user import User
+from models.amenity import Amenity
 import json
 
 
@@ -84,3 +85,70 @@ def place(place_id):
             abort(404)
         else:
             abort(400, description="Not a JSON")
+
+@app_views.route('/places_search', methods=['POST'], strict_slashes=False)
+def places_search():
+    """
+    Retrieves all Place objects depending of the JSON in the body of the request
+    """
+    if request.json:
+        new_dict = request.get_json()
+        if new_dict:
+            cont = 0
+            for lists in new_dict.values():
+                if lists != []:
+                    cont += 1
+            if cont == 0:
+                places = storage.all(Place).values()
+                single_places = []
+                for place in places:
+                    single_places.append(place.to_dict())
+                return jsonify(single_places)
+            else:
+                all_places = []
+                city_ids = []
+                places_filter = []
+                if "states" in new_dict.keys() and len(new_dict['states']) != 0:
+                    for state in new_dict['states']:
+                        new_state = storage.get(State, state)
+                        for city in new_state.cities:
+                            new_city = storage.get(City, city.id)
+                            city_ids.append(city.id)
+                            for place in new_city.places:
+                                new_place = storage.get(Place, place.id)
+                                all_places.append(new_place.to_dict())
+                                places_filter.append(new_place)
+                if "cities" in new_dict.keys() and len(new_dict['cities']) != 0:
+                    for city in new_dict['cities']:
+                        if city not in city_ids:
+                            new_city = storage.get(City, city)
+                            city_ids.append(city)
+                            for place in new_city.places:
+                                new_place = storage.get(Place, place.id)
+                                all_places.append(new_place.to_dict())
+                                places_filter.append(new_place)
+                if "amenities" in new_dict.keys() and len(new_dict['amenities']) != 0:
+                    places_amenity_filter = []
+                    for amenity_id in new_dict['amenities']:
+                        if places_filter != []:
+                            for place in places_filter:
+                                for place_amenity_id in place.amenities:
+                                    if amenity_id == place_amenity_id:
+                                        places_amenity_filter.append(place.to_dict())
+                        else:
+                            places = storage.all(Place).values()
+                            single_places = []
+                            for place in places:
+                                for place_amenity_id in place.amenities:
+                                    if amenity_id == place_amenity_id:
+                                        single_places.append(place.to_dict())
+                            return jsonify(single_places)
+                    return jsonify(places_amenity_filter)
+                return jsonify(all_places)
+        else:
+            places = storage.all(Place).values()
+            single_places = []
+            for place in places:
+                single_places.append(place.to_dict())
+            return jsonify(single_places)
+    abort(400, description="Not a JSON")
