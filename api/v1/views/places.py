@@ -131,23 +131,30 @@ def places_search():
                                 places_filter.append(new_place)
                 if "amenities" in new_dict.keys() and len(new_dict['amenities']) != 0:
                     places_amenity_filter = []
+                    print("PLACES")
+                    print(places_filter)
                     if places_filter != []:
                         for place in places_filter:
+                            print("ONE PLACE")
+                            print(place)
                             save_place = place.to_dict()
-                            for place_amenity_id in place.amenities:
+                            nope = 0
+                            for place_amenity_id in place.amenities:                
                                 for amenity_id in new_dict['amenities']:
                                     if amenity_id != place_amenity_id.id:
-                                        break
-                        places_amenity_filter.append(save_place)
+                                        nope = 1
+                                if nope == 0:
+                                    places_amenity_filter.append(save_place)
                         print(len(places_amenity_filter))
                         return jsonify(places_amenity_filter)
                     else:
                         places = storage.all(Place).values()
                         single_places = []
                         for place in places:
+                            save_place = place.to_dict()
                             for place_amenity_id in place.amenities:
                                 if amenity_id == place_amenity_id:
-                                    single_places.append(place.to_dict())
+                                    single_places.append(save_place)
                         return jsonify(single_places)
                 else:
                     all_places = city_filter + states_filter
