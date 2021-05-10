@@ -10,7 +10,9 @@ from models.amenity import Amenity
 import json
 import models
 
-@app_views.route('/places/<place_id>/amenities', methods=['GET'], strict_slashes=False)
+
+@app_views.route('/places/<place_id>/amenities', methods=['GET'],
+                 strict_slashes=False)
 def place_id_amenity(place_id):
     """
     Retrieves the list of all Amenity objects of a Place
@@ -35,7 +37,10 @@ def place_id_amenity(place_id):
                 return jsonify(single_objs)
             abort(404)
 
-@app_views.route('/places/<place_id>/amenities/<amenity_id>', methods=['DELETE', 'POST'], strict_slashes=False)
+
+@app_views.route('/places/<place_id>/amenities/<amenity_id>',
+                 methods=['DELETE', 'POST'],
+                 strict_slashes=False)
 def place_id_amenity_id(place_id, amenity_id):
     """
     Deletes a Amenity object to a Place
@@ -56,5 +61,5 @@ def place_id_amenity_id(place_id, amenity_id):
                 if amenity_id == amen.id:
                     return jsonify(amen.to_dict()), 200
             setattr(place, 'amenity_id', amenity_id)
-            return jsonify(amen.to_dict()), 201 
+            return jsonify(amen.to_dict()), 201
     abort(404)

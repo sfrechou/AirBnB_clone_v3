@@ -11,7 +11,8 @@ from models.amenity import Amenity
 import json
 
 
-@app_views.route('/cities/<city_id>/places', methods=['GET', 'POST'], strict_slashes=False)
+@app_views.route('/cities/<city_id>/places', methods=['GET', 'POST'],
+                 strict_slashes=False)
 def city_id_places(city_id):
     """
     Retrieves the list of all Place objects of a City
@@ -49,7 +50,9 @@ def city_id_places(city_id):
         else:
             abort(400, description="Not a JSON")
 
-@app_views.route('/places/<place_id>', methods=['GET', 'DELETE', 'PUT'], strict_slashes=False)
+
+@app_views.route('/places/<place_id>', methods=['GET', 'DELETE', 'PUT'],
+                 strict_slashes=False)
 def place(place_id):
     """
     Retrieves a Place object
@@ -86,10 +89,11 @@ def place(place_id):
         else:
             abort(400, description="Not a JSON")
 
+
 @app_views.route('/places_search', methods=['POST'], strict_slashes=False)
 def places_search():
     """
-    Retrieves all Place objects depending of the JSON in the body of the request
+    Retrieves all Place objects depending of the JSON in the body
     """
     new_dict = request.get_json()
     if new_dict is None:
@@ -146,7 +150,7 @@ def places_search():
                         amen = storage.get(Amenity, amenity_id)
                         if amen not in place.amenities:
                             nope = 1
-                            break         
+                            break
                     if nope == 0:
                         places_amenity_filter.append(save_place)
                 return jsonify(places_amenity_filter)
@@ -160,11 +164,10 @@ def places_search():
                         amen = storage.get(Amenity, amenity_id)
                         if amen not in place.amenities:
                             nope = 1
-                            break         
+                            break
                     if nope == 0:
                         single_places.append(save_place)
                 return jsonify(single_places)
         else:
             all_places = city_filter + states_filter
             return jsonify(all_places)
-

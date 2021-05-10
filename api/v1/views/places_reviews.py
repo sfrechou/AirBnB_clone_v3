@@ -8,7 +8,9 @@ from models.review import Review
 from models.user import User
 import json
 
-@app_views.route('/places/<place_id>/reviews', methods=['GET', 'POST'], strict_slashes=False)
+
+@app_views.route('/places/<place_id>/reviews',
+                 methods=['GET', 'POST'], strict_slashes=False)
 def place_id_review(place_id):
     """
     Retrieves the list of all Review objects of a Place
@@ -44,7 +46,9 @@ def place_id_review(place_id):
         else:
             abort(400, description="Not a JSON")
 
-@app_views.route('/reviews/<review_id>', methods=['GET', 'DELETE', 'PUT'], strict_slashes=False)
+
+@app_views.route('/reviews/<review_id>', methods=['GET', 'DELETE', 'PUT'],
+                 strict_slashes=False)
 def reviews_id(review_id):
     """
     Retrieves a Review object
@@ -72,7 +76,8 @@ def reviews_id(review_id):
             reviews = storage.get(Review, review_id)
             if not reviews:
                 abort(404)
-            ignore_keys = ['id', 'user_id', 'place_id', 'created_at', 'updated_at']
+            ignore_keys = ['id', 'user_id', 'place_id', 'created_at',
+                           'updated_at']
             for key, value in new_dict.items():
                 if key not in ignore_keys:
                     setattr(reviews, key, value)

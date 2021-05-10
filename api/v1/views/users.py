@@ -19,7 +19,7 @@ def get_users():
         for key, value in all_obj.items():
             single_objs.append(value.to_dict())
         return jsonify(single_objs)
-  
+
     if request.method == 'POST':
         if request.json:
             new_dict = request.get_json()
@@ -35,7 +35,8 @@ def get_users():
             abort(400, description="Not a JSON")
 
 
-@app_views.route('/users/<user_id>',  methods=['GET', 'DELETE', 'PUT'], strict_slashes=False)
+@app_views.route('/users/<user_id>',  methods=['GET', 'DELETE', 'PUT'],
+                 strict_slashes=False)
 def get_user_id(user_id):
     """
     Retrieves a User object by id
@@ -50,7 +51,7 @@ def get_user_id(user_id):
                 new_dict = value.to_dict()
                 return jsonify(new_dict)
         abort(404)
-    
+
     if request.method == 'DELETE':
         all_obj = storage.all(User)
         new_dict = {}
