@@ -108,6 +108,8 @@ def places_search():
                 all_places = []
                 city_ids = []
                 places_filter = []
+                states_filter = []
+                city_filter = []
                 if "states" in new_dict.keys() and len(new_dict['states']) != 0:
                     for state in new_dict['states']:
                         new_state = storage.get(State, state)
@@ -116,7 +118,7 @@ def places_search():
                             city_ids.append(city.id)
                             for place in new_city.places:
                                 new_place = storage.get(Place, place.id)
-                                all_places.append(new_place.to_dict())
+                                states_filter.append(new_place.to_dict())
                                 places_filter.append(new_place)
                 if "cities" in new_dict.keys() and len(new_dict['cities']) != 0:
                     for city in new_dict['cities']:
@@ -125,16 +127,17 @@ def places_search():
                             city_ids.append(city)
                             for place in new_city.places:
                                 new_place = storage.get(Place, place.id)
-                                all_places.append(new_place.to_dict())
+                                city_filter.append(new_place.to_dict())
                                 places_filter.append(new_place)
                 if "amenities" in new_dict.keys() and len(new_dict['amenities']) != 0:
                     places_amenity_filter = []
                     for amenity_id in new_dict['amenities']:
                         if places_filter != []:
                             for place in places_filter:
+                                save_place = place.to_dict()
                                 for place_amenity_id in place.amenities:
-                                    if amenity_id == place_amenity_id:
-                                        places_amenity_filter.append(place.to_dict())
+                                    if amenity_id == place_amenity_id.id:
+                                        places_amenity_filter.append(save_place)
                         else:
                             places = storage.all(Place).values()
                             single_places = []
@@ -144,7 +147,9 @@ def places_search():
                                         single_places.append(place.to_dict())
                             return jsonify(single_places)
                     return jsonify(places_amenity_filter)
-                return jsonify(all_places)
+                else:
+                    all_places = city_filter + states_filter
+                    return jsonify(all_places)
         else:
             places = storage.all(Place).values()
             single_places = []
