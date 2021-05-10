@@ -131,20 +131,21 @@ def places_search():
                                 places_filter.append(new_place)
                 if "amenities" in new_dict.keys() and len(new_dict['amenities']) != 0:
                     places_amenity_filter = []
-                    print("PLACES")
-                    print(places_filter)
+                    # places_filter es una lista con los places de los states y cities ya con los filtros
                     if places_filter != []:
                         for place in places_filter:
-                            print("ONE PLACE")
-                            print(place)
                             save_place = place.to_dict()
                             nope = 0
-                            for place_amenity_id in place.amenities:                
-                                for amenity_id in new_dict['amenities']:
-                                    if amenity_id != place_amenity_id.id:
-                                        nope = 1
-                                if nope == 0:
-                                    places_amenity_filter.append(save_place)
+                            # place_amenity_id es variable que creo para iterar las amenities de CADA place y obtener el id de la misma
+                            # para compararlo con las que me pasan por json
+                            for place_amenity_id in place.amenities:  
+                                # las ids que me pasan por json
+                                if place_amenity_id.id not in new_dict['amenities']:
+                                    nope = 1
+                                    break         
+                            # si no cambio nunca el valor del flag, agrega ese lugar a la lista
+                            if nope == 0:
+                                places_amenity_filter.append(save_place)
                         print(len(places_amenity_filter))
                         return jsonify(places_amenity_filter)
                     else:
