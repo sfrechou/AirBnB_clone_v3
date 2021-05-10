@@ -6,9 +6,10 @@ from models import storage
 from models.state import State
 from models.city import City
 import json
-    
 
-@app_views.route('/states/<state_id>/cities', methods=['GET', 'POST'], strict_slashes=False)
+
+@app_views.route('/states/<state_id>/cities', methods=['GET', 'POST'],
+                 strict_slashes=False)
 def state_id_city(state_id):
     """
     Retrieves the list of all City objects of a State
@@ -39,7 +40,9 @@ def state_id_city(state_id):
         else:
             abort(400, description="Not a JSON")
 
-@app_views.route('/cities/<city_id>', methods=['GET', 'DELETE', 'PUT'], strict_slashes=False)
+
+@app_views.route('/cities/<city_id>', methods=['GET', 'DELETE', 'PUT'],
+                 strict_slashes=False)
 def city(city_id):
     """
     Retrieves a City object
