@@ -91,79 +91,80 @@ def places_search():
     """
     Retrieves all Place objects depending of the JSON in the body of the request
     """
-    if request.json:
-        new_dict = request.get_json()
-        if new_dict:
-            cont = 0
-            for lists in new_dict.values():
-                if lists != []:
-                    cont += 1
-            if cont == 0:
+    new_dict = request.get_json()
+    if new_dict is None:
+        abort(400, description="Not a JSON")
+
+    if len(new_dict) == 0:
+        places = storage.all(Place).values()
+        single_places = []
+        for place in places:
+            single_places.append(place.to_dict())
+        return jsonify(single_places)
+    cont = 0
+    for lists in new_dict.values():
+        if lists != []:
+            cont += 1
+    if cont == 0:
+        places = storage.all(Place).values()
+        single_places = []
+        for place in places:
+            single_places.append(place.to_dict())
+        return jsonify(single_places)
+    else:
+        all_places = []
+        city_ids = []
+        places_filter = []
+        states_filter = []
+        city_filter = []
+        if "states" in new_dict.keys() and len(new_dict['states']) != 0:
+            for state in new_dict['states']:
+                new_state = storage.get(State, state)
+                for city in new_state.cities:
+                    new_city = storage.get(City, city.id)
+                    city_ids.append(city.id)
+                    for place in new_city.places:
+                        new_place = storage.get(Place, place.id)
+                        states_filter.append(new_place.to_dict())
+                        places_filter.append(new_place)
+        if "cities" in new_dict.keys() and len(new_dict['cities']) != 0:
+            for city in new_dict['cities']:
+                if city not in city_ids:
+                    new_city = storage.get(City, city)
+                    city_ids.append(city)
+                    for place in new_city.places:
+                        new_place = storage.get(Place, place.id)
+                        city_filter.append(new_place.to_dict())
+                        places_filter.append(new_place)
+        if "amenities" in new_dict.keys() and len(new_dict['amenities']) != 0:
+            places_amenity_filter = []
+            if places_filter != []:
+                for place in places_filter:
+                    save_place = place.to_dict()
+                    nope = 0
+                    for amenity_id in new_dict['amenities']:
+                        amen = storage.get(Amenity, amenity_id)
+                        if amen not in place.amenities:
+                            nope = 1
+                            break         
+                    if nope == 0:
+                        places_amenity_filter.append(save_place)
+                return jsonify(places_amenity_filter)
+            else:
                 places = storage.all(Place).values()
                 single_places = []
                 for place in places:
-                    single_places.append(place.to_dict())
+                    save_place = place.to_dict()
+                    nope = 0
+                    for amenity_id in new_dict['amenities']:
+                        amen = storage.get(Amenity, amenity_id)
+                        if amen not in place.amenities:
+                            nope = 1
+                            break         
+                    if nope == 0:
+                        single_places.append(save_place)
                 return jsonify(single_places)
-            else:
-                all_places = []
-                city_ids = []
-                places_filter = []
-                states_filter = []
-                city_filter = []
-                if "states" in new_dict.keys() and len(new_dict['states']) != 0:
-                    for state in new_dict['states']:
-                        new_state = storage.get(State, state)
-                        for city in new_state.cities:
-                            new_city = storage.get(City, city.id)
-                            city_ids.append(city.id)
-                            for place in new_city.places:
-                                new_place = storage.get(Place, place.id)
-                                states_filter.append(new_place.to_dict())
-                                places_filter.append(new_place)
-                if "cities" in new_dict.keys() and len(new_dict['cities']) != 0:
-                    for city in new_dict['cities']:
-                        if city not in city_ids:
-                            new_city = storage.get(City, city)
-                            city_ids.append(city)
-                            for place in new_city.places:
-                                new_place = storage.get(Place, place.id)
-                                city_filter.append(new_place.to_dict())
-                                places_filter.append(new_place)
-                if "amenities" in new_dict.keys() and len(new_dict['amenities']) != 0:
-                    places_amenity_filter = []
-                    if places_filter != []:
-                        for place in places_filter:
-                            save_place = place.to_dict()
-                            nope = 0
-                            for amenity_id in new_dict['amenities']:
-                                amen = storage.get(Amenity, amenity_id)
-                                if amen not in place.amenities:
-                                    nope = 1
-                                    break         
-                            if nope == 0:
-                                places_amenity_filter.append(save_place)
-                        return jsonify(places_amenity_filter)
-                    else:
-                        places = storage.all(Place).values()
-                        single_places = []
-                        for place in places:
-                            save_place = place.to_dict()
-                            nope = 0
-                            for amenity_id in new_dict['amenities']:
-                                amen = storage.get(Amenity, amenity_id)
-                                if amen not in place.amenities:
-                                    nope = 1
-                                    break         
-                            if nope == 0:
-                                single_places.append(save_place)
-                        return jsonify(single_places)
-                else:
-                    all_places = city_filter + states_filter
-                    return jsonify(all_places)
         else:
-            places = storage.all(Place).values()
-            single_places = []
-            for place in places:
-                single_places.append(place.to_dict())
-            return jsonify(single_places)
-    abort(400, description="Not a JSON")
+            all_places = city_filter + states_filter
+            return jsonify(all_places)
+
