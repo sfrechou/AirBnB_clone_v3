@@ -134,11 +134,12 @@ def places_search():
                     if places_filter != []:
                         for place in places_filter:
                             save_place = place.to_dict()
-                            for amenity_id in new_dict['amenities']:   
-                                for place_amenity_id in place.amenities:
+                            for place_amenity_id in place.amenities:
+                                for amenity_id in new_dict['amenities']:
                                     if amenity_id != place_amenity_id.id:
                                         break
-                                    places_amenity_filter.append(save_place)
+                        places_amenity_filter.append(save_place)
+                        print(len(places_amenity_filter))
                         return jsonify(places_amenity_filter)
                     else:
                         places = storage.all(Place).values()
