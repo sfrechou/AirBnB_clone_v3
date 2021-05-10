@@ -131,22 +131,23 @@ def places_search():
                                 places_filter.append(new_place)
                 if "amenities" in new_dict.keys() and len(new_dict['amenities']) != 0:
                     places_amenity_filter = []
-                    for amenity_id in new_dict['amenities']:
-                        if places_filter != []:
-                            for place in places_filter:
-                                save_place = place.to_dict()
+                    if places_filter != []:
+                        for place in places_filter:
+                            save_place = place.to_dict()
+                            for amenity_id in new_dict['amenities']:   
                                 for place_amenity_id in place.amenities:
-                                    if amenity_id == place_amenity_id.id:
-                                        places_amenity_filter.append(save_place)
-                        else:
-                            places = storage.all(Place).values()
-                            single_places = []
-                            for place in places:
-                                for place_amenity_id in place.amenities:
-                                    if amenity_id == place_amenity_id:
-                                        single_places.append(place.to_dict())
-                            return jsonify(single_places)
-                    return jsonify(places_amenity_filter)
+                                    if amenity_id != place_amenity_id.id:
+                                        break
+                            places_amenity_filter.append(save_place)
+                        return jsonify(places_amenity_filter)
+                    else:
+                        places = storage.all(Place).values()
+                        single_places = []
+                        for place in places:
+                            for place_amenity_id in place.amenities:
+                                if amenity_id == place_amenity_id:
+                                    single_places.append(place.to_dict())
+                        return jsonify(single_places)
                 else:
                     all_places = city_filter + states_filter
                     return jsonify(all_places)
