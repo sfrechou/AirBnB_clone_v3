@@ -148,9 +148,14 @@ def places_search():
                         single_places = []
                         for place in places:
                             save_place = place.to_dict()
-                            for place_amenity_id in place.amenities:
-                                if amenity_id == place_amenity_id:
-                                    single_places.append(save_place)
+                            nope = 0
+                            for amenity_id in new_dict['amenities']:
+                                amen = storage.get(Amenity, amenity_id)
+                                if amen not in place.amenities:
+                                    nope = 1
+                                    break         
+                            if nope == 0:
+                                single_places.append(save_place)
                         return jsonify(single_places)
                 else:
                     all_places = city_filter + states_filter
