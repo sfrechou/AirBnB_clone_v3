@@ -135,8 +135,9 @@ def places_search():
                         for place in places_filter:
                             save_place = place.to_dict()
                             nope = 0
-                            for place_amenity_id in place.amenities:  
-                                if place_amenity_id.id not in new_dict['amenities']:
+                            for amenity_id in new_dict['amenities']:
+                                amen = storage.get(Amenity, amenity_id)
+                                if amen not in place.amenities:
                                     nope = 1
                                     break         
                             if nope == 0:
