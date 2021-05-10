@@ -138,7 +138,7 @@ def places_search():
                                 for place_amenity_id in place.amenities:
                                     if amenity_id != place_amenity_id.id:
                                         break
-                            places_amenity_filter.append(save_place)
+                                    places_amenity_filter.append(save_place)
                         return jsonify(places_amenity_filter)
                     else:
                         places = storage.all(Place).values()
